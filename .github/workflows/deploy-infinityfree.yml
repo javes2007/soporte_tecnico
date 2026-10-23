@@ -50,6 +50,14 @@ jobs:
           Path("config-hosting.php").write_text(content, encoding="utf-8")
           PY
 
+      - name: Validar sintaxis PHP antes de publicar
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Revisar archivos PHP
+        run: |
+          find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
+
       - name: Sincronizar archivos con InfinityFree
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
