@@ -55,6 +55,20 @@ if (!$conexion->query($sqlHistorial)) {
     error_log("No se pudo preparar historial_reportes: " . $conexion->error);
 }
 
+/* Crea una entrada inicial para los reportes que ya existían antes de activar el historial.
+   Solo se ejecuta para reportes que todavía no tengan ningún evento guardado. */
+$sqlInicial = "INSERT INTO historial_reportes
+    (reporte_id, accion, cliente, telefono, equipo, problema, prioridad, estado, detalle)
+    SELECT r.id, 'Historial inicial', r.cliente, r.telefono, r.equipo, r.problema,
+           r.prioridad, r.estado, 'Datos existentes al activar el historial.'
+    FROM reportes r
+    WHERE NOT EXISTS (
+        SELECT 1 FROM historial_reportes h WHERE h.reporte_id = r.id
+    )";
+if (!$conexion->query($sqlInicial)) {
+    error_log("No se pudo crear el historial inicial: " . $conexion->error);
+}
+
 $EQUIPOS = array("Computador", "Portátil", "Celular", "Impresora", "Red / Router", "Otro");
 $PRIORIDADES = array("Baja", "Media", "Alta");
 $ESTADOS = array("Pendiente", "En reparación", "Resuelto");
