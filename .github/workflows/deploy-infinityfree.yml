@@ -6,6 +6,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     name: Publicar sitio por FTP
@@ -13,6 +16,39 @@ jobs:
     steps:
       - name: Descargar código del repositorio
         uses: actions/checkout@v4
+
+      - name: Validar credenciales y generar configuración privada
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          python3 - <<'PY'
+          import base64
+          import os
+          from pathlib import Path
+
+          names = ("DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD")
+          missing = [name for name in names if not os.environ.get(name)]
+          if missing:
+              raise SystemExit(
+                  "Faltan secretos de GitHub: " + ", ".join(missing)
+                  + ". Configúralos en Settings > Secrets and variables > Actions."
+              )
+
+          def php_string(value):
+              encoded = base64.b64encode(value.encode("utf-8")).decode("ascii")
+              return "base64_decode('" + encoded + "')"
+
+          content = "<?php\nreturn [\n"
+          content += "    'host' => " + php_string(os.environ["DB_HOST"]) + ",\n"
+          content += "    'name' => " + php_string(os.environ["DB_NAME"]) + ",\n"
+          content += "    'user' => " + php_string(os.environ["DB_USER"]) + ",\n"
+          content += "    'password' => " + php_string(os.environ["DB_PASSWORD"]) + ",\n"
+          content += "];\n"
+          Path("config-hosting.php").write_text(content, encoding="utf-8")
+          PY
 
       - name: Sincronizar archivos con InfinityFree
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
