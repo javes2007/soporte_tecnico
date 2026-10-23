@@ -64,6 +64,21 @@ jobs:
         run: |
           find . -type f -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
 
+      - name: Verificar que el FTP pertenece a Soporte Técnico
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+        run: |
+          if [ -z "$FTP_SERVER" ] || [ -z "$FTP_USERNAME" ]; then
+            echo "Faltan FTP_SERVER o FTP_USERNAME en los secretos de GitHub."
+            exit 1
+          fi
+          if [ "$FTP_USERNAME" != "if0_43219755" ]; then
+            echo "Despliegue detenido por seguridad: FTP_USERNAME no corresponde a la cuenta de Soporte Técnico (if0_43219755). Corrige el secreto antes de publicar."
+            exit 1
+          fi
+          echo "Usuario FTP validado para la cuenta de Soporte Técnico."
+
       - name: Sincronizar archivos con InfinityFree
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
