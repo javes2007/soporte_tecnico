@@ -9,6 +9,12 @@ on:
 permissions:
   contents: read
 
+# Evita que varios commits publiquen a la vez y que una versión anterior
+# termine sobrescribiendo archivos de una versión más reciente.
+concurrency:
+  group: infinityfree-production-deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
     name: Publicar sitio por FTP
