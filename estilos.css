@@ -1,0 +1,44 @@
+:root{--fondo:#f2f6fa;--tinta:#16222e;--acento:#0e7c86;--osc:#0a5961;--borde:#d5e0ea;--rojo:#c0392b;--claro:#e6f0f5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--fondo);color:var(--tinta);line-height:1.5}
+a{color:var(--acento)}
+h1{color:var(--osc);margin:0}
+.barra{padding:16px 24px;background:var(--tinta);color:#7fe3ea;font-size:1.3rem;font-weight:bold}
+.contenedor{max-width:1150px;margin:24px auto;padding:0 16px}
+.titulo-fila{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin:18px 0 8px}
+.btn,button,.btn-chico{display:inline-block;background:var(--acento);color:#fff!important;border:0;border-radius:6px;padding:9px 18px;font:inherit;text-decoration:none;cursor:pointer}
+.btn:hover,button:hover,.btn-chico:hover{background:var(--osc)}
+.btn-chico{padding:5px 10px;font-size:.9rem}
+.peligro{background:var(--rojo)!important}
+.aviso,.error{padding:10px 14px;border-radius:6px;background:#e3f6ea;border:1px solid #b4dfc3}
+.error{background:#fdecea;border-color:#f3b8b4;color:var(--rojo)}
+
+.resumen{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.dato{background:#fff;border:1px solid var(--borde);border-left:6px solid #999;border-radius:8px;padding:12px 16px;font-size:.95rem}
+.dato span{display:block;font-size:2rem;font-weight:bold}
+.dato.pendiente{border-left-color:#e0a100}
+.dato.reparacion{border-left-color:#2d7be0}
+.dato.resuelto{border-left-color:#2e9e5b}
+
+.buscador{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}
+.buscador input[type=text]{flex:1;min-width:200px}
+.select-chico{width:auto!important}
+input,select,textarea{width:100%;padding:9px;border:1px solid var(--borde);border-radius:6px;font:inherit;background:#fff}
+
+.tabla-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--borde)}
+th,td{padding:10px 12px;border-bottom:1px solid var(--borde);text-align:left;vertical-align:middle}
+th{background:var(--claro)}
+.acciones{white-space:nowrap}
+.etiqueta{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.82rem;font-weight:bold;white-space:nowrap}
+.pendiente.etiqueta{background:#fff3cd;color:#8a6500}
+.reparacion.etiqueta{background:#dbe9ff;color:#1b4f9c}
+.resuelto.etiqueta{background:#d8f3e3;color:#1d7040}
+.prio-alta{background:#fde0dc;color:#a52a1d}
+.prio-media{background:#fff3cd;color:#8a6500}
+.prio-baja{background:#e3e9ee;color:#46576a}
+
+.formulario{display:grid;gap:14px;max-width:540px;background:#fff;padding:22px;border:1px solid var(--borde);border-radius:10px;margin-top:14px}
+.formulario label{display:grid;gap:5px;font-weight:bold}
+.fila-botones{display:flex;gap:14px;align-items:center;margin-top:8px}
+.pie{text-align:center;padding:22px;color:#6b7a88;font-size:.9rem}
