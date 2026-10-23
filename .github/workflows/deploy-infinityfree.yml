@@ -74,6 +74,8 @@ jobs:
           port: 21
           server-dir: htdocs/
           local-dir: ./
+          # Estado nuevo para forzar una sincronización completa sin borrar archivos del hosting.
+          state-name: .ftp-deploy-sync-state-v2.json
           exclude: |
             **/.git*
             **/.git*/**
