@@ -28,9 +28,9 @@ $stmt->execute(); $resultado = $stmt->get_result();
 <?php if (isset($_GET['msg'])): ?><p class="aviso"><?php echo e($_GET['msg']); ?></p><?php endif; ?>
 <section class="panel-bienvenida"><div><p class="sobretitulo">PANEL DE CONTROL</p><h1>Seguimiento de equipos</h1><p class="texto-ayuda">Consulta los equipos recibidos, revisa su estado y conserva el historial de cada servicio.</p></div><a class="btn" href="crear.php">＋ Nuevo reporte</a></section>
 <div class="resumen">
-<a class="dato pendiente" href="index.php?estado=Pendiente"><span><?php echo $conteo["Pendiente"]; ?></span>Pendientes <small>Por revisar</small></a>
+<a class="dato pendiente" href="index.php?estado=Pendiente"><span><?php echo $conteo["Pendiente"]; ?></span>Equipos pendientes <small>Por revisar</small></a>
 <a class="dato reparacion" href="index.php?estado=En%20reparaci%C3%B3n"><span><?php echo $conteo["En reparación"]; ?></span>En reparación <small>En revisión o trabajo</small></a>
-<a class="dato resuelto" href="index.php?estado=Resuelto"><span><?php echo $conteo["Resuelto"]; ?></span>Reparados / resueltos <small>Trabajo terminado</small></a>
+<a class="dato resuelto" href="index.php?estado=Resuelto"><span><?php echo $conteo["Resuelto"]; ?></span>Equipos reparados <small>Trabajo terminado</small></a>
 </div>
 <div class="titulo-fila"><h2>Reportes registrados</h2><a class="btn-secundario" href="historial.php">Ver historial completo</a></div>
 <form method="GET" action="index.php" class="buscador">
@@ -43,7 +43,7 @@ $stmt->execute(); $resultado = $stmt->get_result();
 <?php else: ?>
 <div class="tabla-scroll"><table><thead><tr><th>#</th><th>Cliente</th><th>Teléfono</th><th>Equipo</th><th>Problema</th><th>Prioridad</th><th>Estado</th><th>Fecha de ingreso</th><th>Acciones</th></tr></thead><tbody>
 <?php while ($fila = $resultado->fetch_assoc()) { ?>
-<tr><td><?php echo (int)$fila['id']; ?></td><td><strong><?php echo e($fila['cliente']); ?></strong></td><td><?php echo e($fila['telefono']); ?></td><td><?php echo e($fila['equipo']); ?></td><td class="problema-celda"><?php echo e($fila['problema']); ?></td><td><span class="etiqueta prio-<?php echo strtolower(e($fila['prioridad'])); ?>"><?php echo e($fila['prioridad']); ?></span></td><td><span class="etiqueta <?php echo clase_estado($fila['estado']); ?>"><?php echo $fila['estado'] === 'Resuelto' ? 'Reparado' : e($fila['estado']); ?></span></td><td><?php echo e(date("d/m/Y H:i", strtotime($fila['fecha']))); ?></td><td class="acciones"><a class="btn-chico" href="editar.php?id=<?php echo (int)$fila['id']; ?>">Editar</a> <a class="btn-chico secundario" href="historial.php?id=<?php echo (int)$fila['id']; ?>">Historial</a> <a class="btn-chico peligro" href="eliminar.php?id=<?php echo (int)$fila['id']; ?>">Retirar</a></td></tr>
+<tr><td><?php echo (int)$fila['id']; ?></td><td><strong><?php echo e($fila['cliente']); ?></strong></td><td><?php echo e($fila['telefono']); ?></td><td><?php echo e($fila['equipo']); ?></td><td class="problema-celda"><?php echo e($fila['problema']); ?></td><td><span class="etiqueta prio-<?php echo strtolower(e($fila['prioridad'])); ?>"><?php echo e($fila['prioridad']); ?></span></td><td><span class="etiqueta <?php echo clase_estado($fila['estado']); ?>"><?php echo $fila['estado'] === 'Resuelto' ? 'Reparado' : e($fila['estado']); ?></span></td><td><?php echo e(date("d/m/Y H:i", strtotime($fila['fecha']))); ?></td><td class="acciones"><a class="btn-chico" href="soporte.php?id=<?php echo (int)$fila['id']; ?>">Generar soporte</a> <a class="btn-chico secundario" href="editar.php?id=<?php echo (int)$fila['id']; ?>">Editar</a> <a class="btn-chico secundario" href="historial.php?id=<?php echo (int)$fila['id']; ?>">Historial</a> <a class="btn-chico peligro" href="eliminar.php?id=<?php echo (int)$fila['id']; ?>">Retirar</a></td></tr>
 <?php } ?>
 </tbody></table></div>
 <?php endif; ?>
