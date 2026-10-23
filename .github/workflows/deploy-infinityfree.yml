@@ -101,3 +101,5 @@ jobs:
             database.sql
             README.md
           dangerous-clean-slate: false
+
+# Redeploy solicitado el 2026-10-23 para volver a sincronizar todos los archivos.
