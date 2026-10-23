@@ -42,3 +42,32 @@ th{background:var(--claro)}
 .formulario label{display:grid;gap:5px;font-weight:bold}
 .fila-botones{display:flex;gap:14px;align-items:center;margin-top:8px}
 .pie{text-align:center;padding:22px;color:#6b7a88;font-size:.9rem}
+
+/* Navegación y seguimiento */
+.barra{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.barra-inicio{color:#fff!important;text-decoration:none;font-size:.95rem;font-weight:normal;border:1px solid rgba(255,255,255,.35);padding:6px 12px;border-radius:6px}
+.barra-inicio:hover{background:rgba(255,255,255,.12)}
+.panel-bienvenida{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;margin:12px 0 22px}
+.panel-bienvenida h1{margin:0 0 4px}
+.sobretitulo{font-size:.75rem;letter-spacing:.12em;font-weight:bold;color:var(--acento);margin:0 0 4px}
+.texto-ayuda{color:#5f6e7b;margin:8px 0 14px}
+.btn-secundario{display:inline-block;padding:8px 13px;border:1px solid var(--borde);border-radius:6px;background:#fff;color:var(--tinta)!important;text-decoration:none;cursor:pointer}
+.btn-secundario:hover{background:var(--claro)}
+.dato{display:block;color:var(--tinta);text-decoration:none}
+.dato:hover{box-shadow:0 3px 12px rgba(22,34,46,.09);transform:translateY(-1px)}
+.dato small{display:block;color:#647381;font-size:.82rem;margin-top:3px}
+.resumen a.dato{transition:transform .15s,box-shadow .15s}
+.vacio,.panel-confirmacion{background:#fff;border:1px solid var(--borde);border-radius:10px;padding:22px;margin:18px 0}
+.vacio h3{margin-top:0}
+.problema-celda{min-width:180px;max-width:300px}
+.detalle-celda{min-width:220px;max-width:440px;white-space:pre-wrap;overflow-wrap:anywhere}
+.btn-chico.secundario{background:#e6f0f5!important;color:#16424a!important}
+.formulario small{font-weight:normal;color:#657482}
+h2{color:var(--osc)}
+@media(max-width:640px){
+  .barra{padding:13px 16px;font-size:1.05rem}
+  .contenedor{margin:18px auto}
+  .panel-bienvenida .btn{width:100%;text-align:center}
+  .fila-botones{flex-wrap:wrap}
+  .fila-botones>*{text-align:center}
+}
