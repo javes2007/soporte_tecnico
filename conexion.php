@@ -10,15 +10,11 @@ if ($esHosting) {
     $usuario = $config['user'] ?? '';
     $clave = $config['password'] ?? '';
     $bd = $config['name'] ?? '';
-
-    // No mostrar detalles internos del servidor a visitantes.
     ini_set('display_errors', '0');
     error_reporting(E_ALL);
 } else {
-    // Configuración local para XAMPP o Termux.
     ini_set('display_errors', '1');
     error_reporting(E_ALL);
-
     $host = "127.0.0.1";
     $usuario = "root";
     $clave = "";
@@ -34,25 +30,66 @@ if ($conexion->connect_errno) {
         http_response_code(500);
         die("No se pudo conectar a la base de datos. Revisa la configuración de la base de datos del sitio.");
     }
-
-    die("No se pudo conectar a la base de datos: " . $conexion->connect_error .
-        " -- ¿Importaste database.sql?");
+    die("No se pudo conectar a la base de datos: " . $conexion->connect_error . " -- ¿Importaste database.sql?");
 }
 $conexion->set_charset("utf8mb4");
 
-// Listas de valores permitidos (se usan en los formularios y para validar)
-$EQUIPOS      = array("Computador", "Portátil", "Celular", "Impresora", "Red / Router", "Otro");
-$PRIORIDADES  = array("Baja", "Media", "Alta");
-$ESTADOS      = array("Pendiente", "En reparación", "Resuelto");
+// Crear la tabla de historial si la instalación ya existente todavía no la tiene.
+// No borra ni modifica los reportes actuales.
+$sqlHistorial = "CREATE TABLE IF NOT EXISTS historial_reportes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reporte_id INT NOT NULL,
+    accion VARCHAR(30) NOT NULL,
+    cliente VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20) NULL,
+    equipo VARCHAR(30) NOT NULL,
+    problema TEXT NOT NULL,
+    prioridad VARCHAR(10) NOT NULL,
+    estado VARCHAR(20) NOT NULL,
+    detalle TEXT NULL,
+    fecha_evento TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_historial_reporte (reporte_id),
+    INDEX idx_historial_fecha (fecha_evento)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
+if (!$conexion->query($sqlHistorial)) {
+    error_log("No se pudo preparar historial_reportes: " . $conexion->error);
+}
 
-// Para mostrar texto de forma segura en HTML
+$EQUIPOS = array("Computador", "Portátil", "Celular", "Impresora", "Red / Router", "Otro");
+$PRIORIDADES = array("Baja", "Media", "Alta");
+$ESTADOS = array("Pendiente", "En reparación", "Resuelto");
+
 function e($texto) {
     return htmlspecialchars((string)$texto, ENT_QUOTES, 'UTF-8');
 }
 
-// Clase CSS según el estado
 function clase_estado($estado) {
     if ($estado == "Resuelto") return "resuelto";
     if ($estado == "En reparación") return "reparacion";
     return "pendiente";
+}
+
+// Guarda una fotografía de los datos del reporte en cada evento importante.
+function registrar_historial($conexion, $reporteId, $accion, $datos, $detalle = "") {
+    $stmt = $conexion->prepare("INSERT INTO historial_reportes
+        (reporte_id, accion, cliente, telefono, equipo, problema, prioridad, estado, detalle)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        error_log("No se pudo preparar el historial: " . $conexion->error);
+        return false;
+    }
+
+    $cliente = (string)($datos['cliente'] ?? 'Sin nombre');
+    $telefono = (string)($datos['telefono'] ?? '');
+    $equipo = (string)($datos['equipo'] ?? 'Otro');
+    $problema = (string)($datos['problema'] ?? '');
+    $prioridad = (string)($datos['prioridad'] ?? 'Media');
+    $estado = (string)($datos['estado'] ?? 'Pendiente');
+    $stmt->bind_param("issssssss", $reporteId, $accion, $cliente, $telefono, $equipo, $problema, $prioridad, $estado, $detalle);
+    $ok = $stmt->execute();
+    if (!$ok) {
+        error_log("No se pudo guardar el historial: " . $stmt->error);
+    }
+    $stmt->close();
+    return $ok;
 }
